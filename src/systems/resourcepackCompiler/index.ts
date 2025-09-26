@@ -1,6 +1,6 @@
 import { MAX_PROGRESS, PROGRESS, PROGRESS_DESCRIPTION } from '../../interface/dialog/exportProgress'
 import { getResourcePackFormat } from '../../util/minecraftUtil'
-import { IntentionalExportError } from '../exporter'
+import { getExportPaths, IntentionalExportError } from '../exporter'
 import { type IRenderedRig } from '../rigRenderer'
 import { ExportedFile } from '../util'
 
@@ -25,7 +25,8 @@ interface ResourcePackCompilerOptions {
 	rig: IRenderedRig
 	displayItemPath: string
 	textureExportFolder: string
-	modelExportFolder: string
+	modelExportFolder: string,
+	resourcePackFolder: string
 }
 
 export type ResourcePackCompiler = (options: ResourcePackCompilerOptions) => Promise<void>
@@ -143,7 +144,22 @@ export default async function compileResourcePack(
 		PROGRESS.set(0)
 		MAX_PROGRESS.set(ajmeta.previousVersionedFiles.size)
 
+		const exportPaths = getExportPaths()
 		const removedFolders = new Set<string>()
+
+		// Clean up files only related to this project.
+		// const foldersToRemove = [exportPaths.modelExportFolder, exportPaths.textureExportFolder]
+		// for (const folder of foldersToRemove) {
+		// 	while (
+		// 		!removedFolders.has(folder) &&
+		// 		fs.existsSync(folder) &&
+		// 		(await fs.promises.readdir(folder)).length === 0
+		// 	) {
+		// 		await fs.promises.rm(folder, {recursive: true});
+		// 		removedFolders.add(folder);
+		// 	}
+		// }
+
 		for (const file of ajmeta.previousVersionedFiles) {
 			if (fs.existsSync(file)) await fs.promises.unlink(file)
 			let folder = PathModule.dirname(file)
@@ -158,6 +174,7 @@ export default async function compileResourcePack(
 			}
 			PROGRESS.set(PROGRESS.get() + 1)
 		}
+		console.log(removedFolders);
 
 		// Write new files
 		ajmeta.coreFiles = new Set(globalCoreFiles.keys())

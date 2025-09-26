@@ -133,6 +133,7 @@ const compileResourcePack: ResourcePackCompiler = async ({
 	displayItemPath,
 	textureExportFolder,
 	modelExportFolder,
+	resourcePackFolder
 }) => {
 	const aj = Project!.animated_java
 
@@ -149,9 +150,10 @@ const compileResourcePack: ResourcePackCompiler = async ({
 
 	// Display Item
 	const displayItemModel = new PredicateItemModel()
-	if (fs.existsSync(displayItemPath)) {
+	console.log("!!!!", displayItemPath)
+	if (fs.existsSync(PathModule.join(resourcePackFolder, displayItemPath))) {
 		console.warn('Display item already exists! Attempting to merge...')
-		displayItemModel.readExisting(displayItemPath)
+		displayItemModel.readExisting(PathModule.join(resourcePackFolder, displayItemPath))
 	}
 
 	displayItemModel.lastOverrideId = Math.max(
@@ -202,8 +204,9 @@ const compileResourcePack: ResourcePackCompiler = async ({
 	// Texture atlas
 	const blockAtlasPath = PathModule.join('assets/minecraft/atlases/blocks.json')
 	const blockAtlas: ITextureAtlas = await fs.promises
-		.readFile(blockAtlasPath, 'utf-8')
-		.catch(() => {
+		.readFile(PathModule.join(resourcePackFolder, blockAtlasPath), 'utf-8')
+		.catch((e) => {
+			console.error(e);
 			console.log('Creating new block atlas...')
 			return '{ "sources": [] }'
 		})

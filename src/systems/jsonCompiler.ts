@@ -1,5 +1,4 @@
 //// <reference types="blockbench-types"/>
-/// <reference path="D:/github-repos/snavesutit/blockbench-types/types/index.d.ts"/>
 /// <reference path="../global.d.ts"/>
 
 import type { IBlueprintBoneConfigJSON } from '../blueprintFormat'

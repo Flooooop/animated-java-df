@@ -9,6 +9,7 @@ import { translate } from '../util/translation'
 import { Variant } from '../variants'
 import { hashAnimations, renderProjectAnimations } from './animationRenderer'
 import compileDataPack from './datapackCompiler'
+import { exportJSONDF } from './df/dfexporter'
 import resourcepackCompiler from './resourcepackCompiler'
 import { hashRig, renderRig } from './rigRenderer'
 import { isCubeValid } from './util'
@@ -44,7 +45,7 @@ export function getExportPaths() {
 	}
 }
 
-async function actuallyExportProject(forceSave = true) {
+async function actuallyExportProject(forceSave = true, df = false) {
 	const aj = Project!.animated_java
 	const dialog = openExportProgressDialog()
 	// Wait for the dialog to open
@@ -133,6 +134,13 @@ async function actuallyExportProject(forceSave = true) {
 		// 		modelExportFolder,
 		// 	})
 		// } else {
+
+		if (df) {
+			exportJSONDF({
+				rig, animations, displayItemPath, textureExportFolder, modelExportFolder
+			})
+		}
+
 		if (aj.data_pack_export_mode !== 'none') {
 			await compileDataPack(aj.target_minecraft_versions, {
 				rig,
@@ -167,7 +175,11 @@ async function actuallyExportProject(forceSave = true) {
 	}
 }
 
-export async function exportProject(forceSave = true) {
+export async function exportProjectDF() {
+	await exportProject(true, true)
+}
+
+export async function exportProject(forceSave = true, df = false) {
 	if (!Project) return // TODO: Handle this error better
 
 	if (
@@ -209,5 +221,5 @@ export async function exportProject(forceSave = true) {
 
 	settingsDialog.close(0)
 
-	await actuallyExportProject(forceSave)
+	await actuallyExportProject(forceSave, df)
 }

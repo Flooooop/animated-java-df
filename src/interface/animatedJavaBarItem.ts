@@ -2,12 +2,12 @@ import AnimatedJavaIcon from '../assets/animated_java_icon.svg'
 import { BLUEPRINT_FORMAT } from '../blueprintFormat'
 import { PACKAGE } from '../constants'
 import { cleanupExportedFiles } from '../systems/cleaner'
-import { exportProject } from '../systems/exporter'
+import { exportProject, exportProjectDF } from '../systems/exporter'
 import { createAction, createBarMenu } from '../util/moddingTools'
 import { translate } from '../util/translation'
+import { openChangelogDialog } from './changelogDialog'
 import { openAboutDialog } from './dialog/about'
 import { openBlueprintSettingsDialog } from './dialog/blueprintSettings'
-import { openChangelogDialog } from './changelogDialog'
 
 function createIconImg() {
 	const IMG = document.createElement('img')
@@ -125,6 +125,20 @@ MenuBar.addAction(
 		click() {
 			void exportProject()
 		},
+	}),
+	MENU.id
+)
+
+MENU.structure.push(new MenuSeparator())
+
+MenuBar.addAction(
+	createAction(`${PACKAGE.name}:diamondfire_export`, {
+		icon: 'export',
+		category: 'animated_java',
+		name: translate('action.export_diamondfire.name'),
+		click() {
+			void exportProjectDF()
+		}
 	}),
 	MENU.id
 )
