@@ -237,7 +237,7 @@ function buildCodeTemplate(templateData: DFTemplateData, rawAnimationData: RawAn
         };
 
         if (nodeData.type === "bone") {
-            itemData.item = `{components:{\"minecraft:custom_data\":{PublicBukkitValues:{\"hypercube:id\":\"${nodeData.name}\",\"hypercube:type\":\"model\"}},\"minecraft:custom_model_data\":${nodeData.data?.custom_model_data || 1}},count:1,id:\"${templateData.item_material}\"}`;
+            itemData.item = `{components:{\"minecraft:custom_data\":{PublicBukkitValues:{\"hypercube:id\":\"${nodeData.name}\",\"hypercube:type\":\"model\"}},\"minecraft:item_model\":\"animated_java:blueprint/${templateData.model_name}/${nodeData.name}\"},count:1,id:\"${templateData.item_material}\"}`
         } else if (nodeData.type === "text_display") {
             itemData.item = `{components:{\"minecraft:custom_data\":{PublicBukkitValues:{\"hypercube:id\":\"${nodeData.name}\",\"hypercube:type\":\"text\"}},\"minecraft:custom_name\":'${nodeData.data?.name}'},count:1,id:\"minecraft:name_tag\"}`;
         } else if (nodeData.type === "item_display") {
